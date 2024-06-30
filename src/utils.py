@@ -5,6 +5,7 @@ from nltk.tokenize import word_tokenize,sent_tokenize
 from nltk.stem import PorterStemmer,WordNetLemmatizer
 from nltk.corpus import stopwords
 import re
+import pickle as pkl
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -49,6 +50,10 @@ def text_preprocess(text):
     
     
     return " ".join(new_text)
+
+def save_file(path,obj):
+    with open(path,"wb")as f:
+        pkl.dump(obj=obj)
 
 if __name__=="__main__":
     print(text_preprocess("SAMI<><>?||)"))

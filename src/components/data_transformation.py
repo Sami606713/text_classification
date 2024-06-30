@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
-from src.utils import text_preprocess
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from src.utils import text_preprocess,save_file
 import os
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -8,33 +11,46 @@ logging.basicConfig(level=logging.INFO)
 
 def inisiate_data_transformation(train_path,test_path):
     try:
-        # set the path where we can store the proceess data
-        train_process_path=os.path.join("Data/procrss","train_process.csv")
-        test_process_path=os.path.join("Data/procrss","test_process.csv")
+        # set the path where we can store the processor
+        procssor_path=os.path.join("models",'processor.pkl')
 
         train_df=pd.read_csv(train_path)
         test_df=pd.read_csv(test_path)
 
-        logging.info("Apply the text cleaning fun on train data")
-        train_df['Text']=train_df['Text'].apply(text_preprocess)
-        logging.info("train data clean successfull")
+        x_train=train_df[['Text']]
+        x_test=test_df[['Text']]
 
-        logging.info("Apply the text cleaning fun on test data")
-        test_df['Text']=test_df['Text'].apply(text_preprocess)
-        logging.info("test data clean successfull")
-        
+        y_train=train_df['Category']
+        y_test=test_df['Category']
 
-        logging.info("save the clean data in prcess_data folder")
+        # Build a pipe line
+        pipe=Pipeline(steps=[
+            ('convert_text_vector',TfidfVectorizer(max_features=1000,preprocessor=text_preprocess))
+        ])
 
-        logging.info(f"Train df save in this location {train_process_path}")
-        train_df.to_csv(train_process_path,index=False)
+        # build a transformer
+        transfomer=ColumnTransformer(transformers=[
+            ("tranform",pie,'Text')
+        ],remainder='passthrough')
 
-        logging.info(f"Test df save in this location {test_process_path}")
-        test_df.to_csv(test_process_path,index=False)
-        
+        # Build the final pipeline
+        final=Pipeline(steps=[
+            ('process',transfomer)
+        ])
+
+        x_train_transform=final.fit_transform(x_train)
+        x_test_transform=final.transform(x_test)
+
+        # concat the transform data and target data
+        train_array=np.c_[x_train_transform, y_train.values.reshape(-1, 1)]
+        test_array=np.c_[x_test_transform,y_test.values.reshape(-1,1)]
+
+        # save processor
+        save_file(path=procssor_path,obj=final)
+
         return [
-            train_process_path,
-            test_process_path
+            train_array,
+            test_array
         ]
 
     except Exception as e:
