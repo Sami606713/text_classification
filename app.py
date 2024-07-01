@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from src.pipelines.prediction_pipeline import predict
-
+nltk.download('punkt')
 # Set the title of the app
 st.title("Welcome to Text Classification App")
 st.header("Text should be in the following categories:")

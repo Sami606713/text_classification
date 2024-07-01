@@ -76,7 +76,7 @@ pip install -r requirements.txt
 ```python 
 python test_environment.py
 ```
-- **You can run the `streamlit web app`
+- **You can run the `streamlit web app`**
 ```python
 streamlit run app.py
 ```
