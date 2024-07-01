@@ -3,6 +3,7 @@ import pandas as pd
 from src.pipelines.prediction_pipeline import predict
 import nltk
 nltk.download('punkt')
+nltk.download('stopwords')
 # Set the title of the app
 st.title("Welcome to Text Classification App")
 st.header("Text should be in the following categories:")
