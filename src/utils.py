@@ -53,7 +53,7 @@ def text_preprocess(text):
 
 def save_file(path,obj):
     with open(path,"wb")as f:
-        pkl.dump(obj=obj)
+        pkl.dump(obj, f)
 
 if __name__=="__main__":
     print(text_preprocess("SAMI<><>?||)"))
