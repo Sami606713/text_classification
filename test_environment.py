@@ -9,12 +9,12 @@ if __name__=="__main__":
     train_path,test_path=insiate_data_ingestion()
 
     # inisiate data transformation
-    # train_array,test_array=inisiate_data_transformation(train_path=train_path,test_path=test_path)
+    train_array,test_array=inisiate_data_transformation(train_path=train_path,test_path=test_path)
     
     # inisiate model training
-    # inisiate_model_training(train_array=train_array,test_array=test_array)
-
-    train_array=np.load('Data/procrss/train_array.npy')
-    test_array=np.load('Data/procrss/test_array.npy')
-
     inisiate_model_training(train_array=train_array,test_array=test_array)
+
+    # train_array=np.load('Data/procrss/train_array.npy')
+    # test_array=np.load('Data/procrss/test_array.npy')
+
+    # inisiate_model_training(train_array=train_array,test_array=test_array)
