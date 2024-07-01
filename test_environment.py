@@ -8,5 +8,5 @@ if __name__=="__main__":
     train_path,test_path=insiate_data_ingestion()
 
     # inisiate data transformation
-    train_process,test_process=inisiate_data_transformation(train_path=train_path,test_path=test_path)
+    inisiate_data_transformation(train_path=train_path,test_path=test_path)
     

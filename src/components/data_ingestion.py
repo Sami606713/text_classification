@@ -17,7 +17,19 @@ def insiate_data_ingestion():
         # Get the data
         df=get_data()
 
+        # Drop the ArticleId col
+        logging.info("Drop the ArticleId")
         df.drop(columns=['ArticleId'],inplace=True)
+
+        # Encode the target cols
+        logging.info("Encoding Target colum")
+        df['Category']=df['Category'].map({
+            "business":0,
+            "entertainment":1,
+            "politics":2,
+            'sport':3,
+            'tech':4
+        })
 
         logging.info("Splitig the data")
         train_data,test_data=train_test_split(df,test_size=0.2,random_state=43)
