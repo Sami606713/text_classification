@@ -1,33 +1,58 @@
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import MultinomialNB,BernoulliNB,GaussianNB
+from src.utils import train_model
+from src.utils import save_file
+import numpy as np
+import os
+import logging
+logging.basicConfig(level=logging.INFO)
 
+def inisiate_model_training(train_array,test_array):
+    model_path=os.path.join("models","model.pkl")
 
-def inisiate_model_training(train_process_path,test_process_path):
-    # saperate the input and output column
-    train_df=pd.read_csv(train_process_path)
-    test_df=pd.read_csv(test_process_path)
+    logging.info("Saperate the input and output feature")
 
-    x_train=train_df[['Text']]
-    x_test=test_df[['Text']]
+    # x_train
+    x_train_transform=train_array[:,:-1]
+    print("X_train_trans",x_train_transform.shape)
 
-    y_train=train_df['Category']
-    y_test=test_df['Category']
+    # y_train
+    y_train=train_array[:,-1]
+    print("y_train",y_train.shape)
+    # print(y_train)
 
-    # Build a pipe line
-    pipe=Pipeline(steps=[
-        ('convert_text_vector',TfidfVectorizer(max_features=1000))
-    ])
+    # x_test
+    x_test_transform=test_array[:,:-1]
+    print("X_test_trans",x_test_transform.shape)
 
-    # build a transformer
-    transfomer=ColumnTransformer(transformers=[
-        ("tranform",pie,'Text')
-    ],remainder='passthrough')
+    # y_test
+    y_test=test_array[:,-1]
+    print("y_test",y_test.shape)
+    # print(y_test)
 
-    # Build the final pipeline
-    final=Pipeline(steps=[
-        ('process',transfomer),
-        ("")
-    ])
+    models={
+        "LR":LogisticRegression(),
+        "RandomForest":RandomForestClassifier(),
+        "Adaboost":AdaBoostClassifier(),
+        "DecessionTree":DecisionTreeClassifier(),
+        "Multi_Naivabiase":MultinomialNB(),
+        "Gussian Naivebiase":GaussianNB(),
+        "Burnalli NaiveBiase":BernoulliNB()
+    }
 
+    logging.info("Evulating the models")
+    report,model_name=train_model(x_train=x_train_transform,y_train=y_train,x_test=x_test_transform,y_test=y_test,models=models)
+    
+    print(report[model_name]['model'])
+    
+    best_model=report[model_name]['model']
+    logging.info("Save the best model")
+    save_file(model_path,best_model)
 
+# if __name__ =="__main__":
+#     train_array=np.load('Data/procrss/train_array.npy')
+#     test_array=np.load('Data/procrss/test_array.npy')
+
+#     inisiate_model_training(train_array=train_array,test_array=test_array)

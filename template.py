@@ -48,4 +48,4 @@ for file in files:
         with open(file,'w') as f:
             pass
     else:
-        logging.inf(f"File {file} already exists")
+        logging.info(f"File {file} already exists")
